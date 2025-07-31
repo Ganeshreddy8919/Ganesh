@@ -1,83 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
-const CredOperation= () => {
-  const [formData, setFormData] = useState({ name: "", email: "" });
-  const [data, setData] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
+function App() {
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [input, setInput] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editingIndex !== null) {
-      
-      const updated = [...data];
-      updated[editingIndex] = formData;
-      setData(updated);
-      setEditingIndex(null);
-    } else {
-       
-      setData([...data, formData]);
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  const addTask = () => {
+    if (input.trim()) {
+      setTasks([...tasks, { text: input.trim(), completed: false }]);
+      setInput('');
     }
-    setFormData({ name: "", email: "" });
   };
 
-  const handleEdit = (index) => {
-    setFormData(data[index]);
-    setEditingIndex(index);
+  const toggleComplete = (index) => {
+    const updated = [...tasks];
+    updated[index].completed = !updated[index].completed;
+    setTasks(updated);
   };
 
-  const handleDelete = (index) => {
-    const filtered = data.filter((_, i) => i !== index);
-    setData(filtered);
+  const deleteTask = (index) => {
+    const updated = tasks.filter((_, i) => i !== index);
+    setTasks(updated);
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h2>CRUD App in React</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="App">
+      <h1>Task Manager</h1>
+      <div className="input-container">
         <input
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
+          type="text"
+          placeholder="Enter a task..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
-        <input
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">{editingIndex !== null ? "Update" : "Add"}</button>
-      </form>
-
-      <table border="1" cellPadding="10" style={{ marginTop: "20px" }}>
-        <thead>
-          <tr>
-            <th>Name</th><th>Email</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.length === 0 && (
-            <tr><td colSpan="3">No data</td></tr>
-          )}
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td><td>{item.email}</td>
-              <td>
-                <button onClick={() => handleEdit(index)}>Edit</button>{" "}
-                <button onClick={() => handleDelete(index)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <button onClick={addTask}>Add</button>
+      </div>
+      <ul className="task-list">
+        {tasks.map((task, index) => (
+          <li key={index} className={task.completed ? 'completed' : ''}>
+            <span onClick={() => toggleComplete(index)}>{task.text}</span>
+            <button onClick={() => deleteTask(index)}>❌</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
+}
 
-export default CredOperation;
+export default App;

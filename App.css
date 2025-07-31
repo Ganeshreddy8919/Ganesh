@@ -1,0 +1,59 @@
+.App {
+  text-align: center;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.input-container {
+  margin-bottom: 1rem;
+}
+
+input {
+  padding: 0.5rem;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-right: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #115293;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.task-list li {
+  background-color: #f9f9f9;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-list li.completed span {
+  text-decoration: line-through;
+  color: #999;
+  cursor: pointer;
+}
+
+.task-list li span {
+  flex-grow: 1;
+  text-align: left;
+  cursor: pointer;
+}
